@@ -4,8 +4,9 @@ from keras import Sequential
 from keras.utils import load_img, img_to_array
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape, LSTM, Dense
+from matplotlib import pyplot as plt
 
-df = pd.read_csv('train_image_paths_new.csv')
+df = pd.read_csv('dataset.csv')
 
 # 讀取圖片並進行資料處理
 X = []
@@ -55,13 +56,45 @@ classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accur
 
 batch_size = 32
 
-classifier.fit(X_train,
-               y_train,
-               batch_size=batch_size,
-               epochs=10,
-               validation_data=(X_val, y_val))
+history = classifier.fit(X_train,
+                         y_train,
+                         epochs=300,
+                         batch_size=batch_size,
+                         steps_per_epoch=7875 // batch_size,
+                         validation_data=(X_val, y_val),
+                         validation_steps=525 // batch_size)
+
+classifier.save('model/train_model_LSTM_epoch300')
+
+# Plot training and validation loss over epochs
+plt.plot(history.history['loss'], label='training_loss')
+plt.plot(history.history['val_loss'], label='validation_loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+plt.savefig('result/train/Loss_epoch300.png')
+plt.show()
+
+# Plot training and validation accuracy over epochs
+plt.plot(history.history['accuracy'], label='training_accuracy')
+plt.plot(history.history['val_accuracy'], label='validation_accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.savefig('result/train/acc_epoch300.png')
+plt.show()
 
 # 評估模型
 loss, accuracy = classifier.evaluate(X_test, y_test)
 print(f'Test Loss: {loss:.4f}')
 print(f'Test Accuracy: {accuracy:.4f}')
+
+y_pred = classifier.predict(X_test, batch_size=batch_size, verbose=1)
+
+# 取得每個圖片的預測結果和對應的機率
+predicted_class = np.argmax(y_pred, axis=1)
+class_probability = np.max(y_pred, axis=1)
+
+# 將預測結果和機率寫入CSV文件(LSTM)
+results_df = pd.DataFrame({'predicted_class': predicted_class, 'class_probability': class_probability})
+results_df.to_csv('result/test/test_LSTM_results_epoch300.csv', index=False)
