@@ -1,3 +1,12 @@
+"""
+Training Environment:
+Python version = 3.7.X
+Tensorflow-GPU = 2.6.0
+Keras = 2.6.0 (=Tensorflow-GPU)
+CUDA version = 12.1
+cuDNN version = 8.8.1.3(cuda12)
+"""
+
 import pandas as pd
 import numpy as np
 from keras import Sequential
