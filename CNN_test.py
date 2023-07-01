@@ -1,7 +1,8 @@
 import pandas as pd
 import tensorflow as tf
-from keras.utils import load_img, img_to_array
+# from keras.utils import load_img, img_to_array
 import numpy as np
+from keras_preprocessing.image import load_img, img_to_array
 from sklearn.model_selection import train_test_split
 
 df = pd.read_csv('dataset.csv')

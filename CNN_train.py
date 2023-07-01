@@ -68,13 +68,13 @@ batch_size = 32
 
 history = classifier.fit(X_train,
                          y_train,
-                         epochs=700,
+                         epochs=800,
                          batch_size=batch_size,
                          steps_per_epoch=7875 // batch_size,
                          validation_data=(X_val, y_val),
                          validation_steps=525 // batch_size)
 
-classifier.save('model/train_model_LSTM_epoch700')
+classifier.save('model/train_model_LSTM_epoch800')
 
 # Plot training and validation loss over epochs
 plt.plot(history.history['loss'], label='training_loss')
@@ -82,7 +82,7 @@ plt.plot(history.history['val_loss'], label='validation_loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.legend()
-plt.savefig('result/train/Loss_epoch700.png')
+plt.savefig('result/train/Loss_epoch800.png')
 plt.show()
 
 # Plot training and validation accuracy over epochs
@@ -91,7 +91,7 @@ plt.plot(history.history['val_accuracy'], label='validation_accuracy')
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.legend()
-plt.savefig('result/train/acc_epoch700.png')
+plt.savefig('result/train/acc_epoch800.png')
 plt.show()
 
 # 評估模型
@@ -107,4 +107,4 @@ class_probability = np.max(y_pred, axis=1)
 
 # 將預測結果和機率寫入CSV文件(LSTM)
 results_df = pd.DataFrame({'predicted_class': predicted_class, 'class_probability': class_probability})
-results_df.to_csv('result/test/test_LSTM_results_epoch700.csv', index=False)
+results_df.to_csv('result/test/test_LSTM_results_epoch800.csv', index=False)
